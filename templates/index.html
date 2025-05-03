@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCC AI Prompt Injection Challenge</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-box">
+                <h1>UCC AI PROMPT INJECTION CHALLENGE</h1>
+                <p class="subtitle">Thử thách khai thác lỗ hổng Prompt Injection</p>
+            </div>
+        </header>
+        
+        <section class="intro-section">
+            <div class="intro-box">
+                <h2>HƯỚNG DẪN</h2>
+                <p>Mục tiêu: Dùng kỹ thuật prompt injection để AI "vô tình" tiết lộ thông tin bí mật mà nó được lập trình để giữ kín.</p>
+                <p>Chọn một thử thách bên dưới để bắt đầu. Mỗi cấp độ sẽ có độ khó tăng dần.</p>
+            </div>
+        </section>
+        
+        <section class="challenge-selection">
+            {% for challenge in challenges %}
+            <div class="challenge-card" onclick="window.location.href='/challenge/{{ challenge.level }}'">
+                <div class="challenge-level">CẤP ĐỘ {{ challenge.level }}</div>
+                <h3 class="challenge-name">{{ challenge.challenge.name }}</h3>
+                <p class="challenge-description">{{ challenge.challenge.description }}</p>
+            </div>
+            {% endfor %}
+        </section>
+        
+        <footer>
+            <p>UCC AI Challenge &copy; 2025</p>
+        </footer>
+    </div>
+</body>
+</html>
