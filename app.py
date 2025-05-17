@@ -14,7 +14,7 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 # Constants
-API_KEY = "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"
+API_KEY = "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"
 BASE_URL = "https://openrouter.ai/api/v1"
 MODEL = "openai/gpt-4o-mini"
 
