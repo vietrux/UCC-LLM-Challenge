@@ -1,395 +1,514 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ challenge.challenge.name }} | UCC AI Challenge</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
     <div class="container">
-        <nav class="top-nav">
-            <a href="/" class="back-button">← Quay lại</a>
-            <div class="level-indicator">CẤP ĐỘ {{ challenge.level }}</div>
-        </nav>
-        
-        <header class="challenge-header">
-            <div class="challenge-box">
-                <h1>{{ challenge.challenge.name }}</h1>
-                
-                <!-- Add challenge image based on background value -->
-                <div class="challenge-image-container">
-                    <!-- <img class="challenge-image" 
+      <nav class="top-nav">
+        <a href="/" class="back-button">← Quay lại</a>
+        <div class="level-indicator">CẤP ĐỘ {{ challenge.level }}</div>
+      </nav>
+
+      <header class="challenge-header">
+        <div class="challenge-box">
+          <h1>{{ challenge.challenge.name }}</h1>
+
+          <!-- Add challenge image based on background value -->
+          <div class="challenge-image-container">
+            <!-- <img class="challenge-image" 
                          src="https://image.pollinations.ai/prompt/english%20only%20anime%20style%20of%20{{ challenge.background|urlencode }}?width=1024&height=512&nologo=true&model=flux&seed=2103&enhance=true"
                          alt="{{ challenge.challenge.name }}"
                          loading="lazy"> -->
-                </div>
-                
-                <div class="challenge-info">
-                    <div class="background-box">
-                        <h3>BỐI CẢNH:</h3>
-                        <p>{{ challenge.background }}</p>
-                    </div>
-                    
-                    <div class="mission-box">
-                        <h3>NHIỆM VỤ:</h3>
-                        <p>{{ challenge.challenge.description }}</p>
-                    </div>
-                </div>
+          </div>
+
+          <div class="challenge-info">
+            <div class="background-box">
+              <h3>BỐI CẢNH:</h3>
+              <p>{{ challenge.background }}</p>
             </div>
-        </header>
-        
-        <section class="chat-container">
-            <div class="chat-history" id="chatHistory">
-                <!-- Chat messages will appear here -->
+
+            <div class="mission-box">
+              <h3>NHIỆM VỤ:</h3>
+              <p>{{ challenge.challenge.description }}</p>
             </div>
-            
-            <div class="check-answer-modal" id="checkAnswerModal" style="display: none;">
-                <div class="check-answer-box">
-                    <h3>Nhập đáp án của bạn</h3>
-                    <p>Nếu bạn đã tìm ra thông tin bí mật, hãy nhập vào đây để kiểm tra:</p>
-                    <input type="text" id="answerInput" placeholder="Nhập đáp án...">
-                    <div class="button-group">
-                        <button id="cancelCheckBtn" class="action-button clear">Hủy bỏ</button>
-                        <button id="submitAnswerBtn" class="action-button send">Kiểm tra</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="input-area">
-                <textarea id="userInput" placeholder="Nhập prompt của bạn..." rows="3"></textarea>
-                <div class="button-group">
-                    <button id="clearBtn" class="action-button clear">Xóa hội thoại</button>
-                    <button id="checkAnswerBtn" class="action-button check">Kiểm tra đáp án</button>
-                    <button id="hintBtn" class="action-button hint">Gợi ý</button>
-                    <button id="sendBtn" class="action-button send">Gửi</button>
-                </div>
-            </div>
-        </section>
-        
-        <div class="turn-counter">Số lượt hội thoại: <span id="turnCounter">0</span></div>
-        
-        <div class="level-navigation" id="levelNavigation" style="display: none; margin-top: 20px; text-align: center;">
-            {% if challenge.level < challenges|length %}
-            <a href="/challenge/{{ challenge.level + 1 }}" class="next-button">Tiếp tục cấp độ tiếp theo</a>
-            {% else %}
-            <a href="/" class="next-button">Quay lại trang chính</a>
-            {% endif %}
+          </div>
         </div>
+      </header>
+
+      <section class="chat-container">
+        <div class="chat-history" id="chatHistory">
+          <!-- Chat messages will appear here -->
+        </div>
+
+        <div
+          class="check-answer-modal"
+          id="checkAnswerModal"
+          style="display: none"
+        >
+          <div class="check-answer-box">
+            <h3>Nhập đáp án của bạn</h3>
+            <p>
+              Nếu bạn đã tìm ra thông tin bí mật, hãy nhập vào đây để kiểm tra:
+            </p>
+            <input type="text" id="answerInput" placeholder="Nhập đáp án..." />
+            <div class="button-group">
+              <button id="cancelCheckBtn" class="action-button clear">
+                Hủy bỏ
+              </button>
+              <button id="submitAnswerBtn" class="action-button send">
+                Kiểm tra
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-area">
+          <textarea
+            id="userInput"
+            placeholder="Nhập prompt của bạn..."
+            rows="3"
+            maxlength="256"
+          ></textarea>
+          <div class="button-group">
+            <button id="clearBtn" class="action-button clear">
+              Xóa hội thoại
+            </button>
+            <button id="checkAnswerBtn" class="action-button check">
+              Kiểm tra đáp án
+            </button>
+            <button id="hintBtn" class="action-button hint">Gợi ý</button>
+            <button id="sendBtn" class="action-button send">Gửi</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="turn-counter">
+        Số lượt hội thoại: <span id="turnCounter">0</span>
+      </div>
+
+      <div
+        class="level-navigation"
+        id="levelNavigation"
+        style="display: none; margin-top: 20px; text-align: center"
+      >
+        {% if challenge.level < challenges|length %}
+        <a href="/challenge/{{ challenge.level + 1 }}" class="next-button"
+          >Tiếp tục cấp độ tiếp theo</a
+        >
+        {% else %}
+        <a href="/" class="next-button">Quay lại trang chính</a>
+        {% endif %}
+      </div>
     </div>
-    
+
     <script>
-        const challengeLevel = {{ challenge.level }};
-        let completedLevels = {{ completed_levels|tojson }};
-        const secretInfo = "{{ challenge.information_to_hide }}";
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            const chatHistory = document.getElementById('chatHistory');
-            const userInput = document.getElementById('userInput');
-            const sendBtn = document.getElementById('sendBtn');
-            const clearBtn = document.getElementById('clearBtn');
-            const hintBtn = document.getElementById('hintBtn');
-            const turnCounter = document.getElementById('turnCounter');
-            const levelNavigation = document.getElementById('levelNavigation');
-            const checkAnswerBtn = document.getElementById('checkAnswerBtn');
-            const checkAnswerModal = document.getElementById('checkAnswerModal');
-            const answerInput = document.getElementById('answerInput');
-            const submitAnswerBtn = document.getElementById('submitAnswerBtn');
-            const cancelCheckBtn = document.getElementById('cancelCheckBtn');
-            
-            // Check if challenge is already completed
-            if (completedLevels.includes(challengeLevel)) {
-                showSuccessInChat();
-            }
-            
-            // Function to display success message as an AI message in the chat
-            function showSuccessInChat() {
-                // Add success message as a special system message
-                const successDiv = document.createElement('div');
-                successDiv.classList.add('message', 'system', 'success');
-                
-                const successContent = document.createElement('div');
-                successContent.classList.add('message-content');
-                
-                // Create the success message with emoji and formatting
-                const successTitle = document.createElement('h3');
-                successTitle.innerHTML = 'CHÚC MỪNG!';
-                successTitle.style.marginBottom = '10px';
-                
-                const successText = document.createElement('p');
-                successText.textContent = 'Bạn đã tìm ra thông tin bí mật:';
-                
-                const secretInfoEl = document.createElement('div');
-                secretInfoEl.classList.add('secret-info-inline');
-                secretInfoEl.textContent = secretInfo;
-                
-                
-                successContent.appendChild(successTitle);
-                successContent.appendChild(successText);
-                successContent.appendChild(secretInfoEl);
-                
-                successDiv.appendChild(successContent);
-                chatHistory.appendChild(successDiv);
-                
-                // Show navigation buttons
-                levelNavigation.style.display = 'block';
-                
-                // Auto scroll to bottom
-                chatHistory.scrollTop = chatHistory.scrollHeight;
-            }
-            
-            // Send message with streaming response
-            function sendMessage() {
-                const message = userInput.value.trim();
-                if (!message) return;
-                
-                // Add user message to chat
-                appendMessage('user', message);
-                userInput.value = '';
-                
-                // Disable input while waiting
-                userInput.disabled = true;
-                sendBtn.disabled = true;
-                
-                // Create temporary message element for streaming
-                const tempMessageDiv = document.createElement('div');
-                tempMessageDiv.classList.add('message', 'assistant');
-                
-                const tempMessageContent = document.createElement('div');
-                tempMessageContent.classList.add('message-content');
-                tempMessageContent.textContent = ''; // Empty at first
-                
-                tempMessageDiv.appendChild(tempMessageContent);
-                chatHistory.appendChild(tempMessageDiv);
-                
-                // Create cursor element
-                const cursorSpan = document.createElement('span');
-                cursorSpan.classList.add('typing-cursor');
-                cursorSpan.textContent = '▌';
-                tempMessageContent.appendChild(cursorSpan);
-                
-                // Auto scroll to bottom
-                chatHistory.scrollTop = chatHistory.scrollHeight;
-                
-                let fullMessage = '';
-                
-                // Set up POST request for streaming
-                fetch('/api/submit-stream', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'text/event-stream'
-                    },
-                    body: JSON.stringify({
-                        level: challengeLevel,
-                        message: message
-                    })
-                }).then(response => {
-                    // Create a new EventSource reader
-                    const reader = response.body.getReader();
-                    const decoder = new TextDecoder();
-                    
-                    // Start reading the stream
-                    function readStream() {
-                        return reader.read().then(({ done, value }) => {
-                            if (done) {
-                                console.log('Stream complete');
-                                return;
-                            }
-                            
-                            // Decode the chunk and parse the event data
-                            const chunk = decoder.decode(value, { stream: true });
-                            const lines = chunk.split("\n\n");
-                            
-                            lines.forEach(line => {
-                                if (line.startsWith('data: ')) {
-                                    try {
-                                        const jsonData = JSON.parse(line.substring(6));
-                                        
-                                        if (jsonData.error) {
-                                            // Handle error
-                                            tempMessageContent.textContent = jsonData.content;
-                                            userInput.disabled = false;
-                                            sendBtn.disabled = false;
-                                            userInput.focus();
-                                            return;
-                                        }
-                                        
-                                        if (!jsonData.done) {
-                                            // Update the message content with streamed chunk
-                                            fullMessage += jsonData.content;
-                                            tempMessageContent.textContent = fullMessage;
-                                            tempMessageContent.appendChild(cursorSpan);
-                                            
-                                            // Auto scroll to bottom as text appears
-                                            chatHistory.scrollTop = chatHistory.scrollHeight;
-                                        } else {
-                                            // Streaming is complete
-                                            cursorSpan.remove();
-                                            
-                                            // Update turn counter
-                                            turnCounter.textContent = jsonData.conversation_turns;
-                                            
-                                            // Enable input
-                                            userInput.disabled = false;
-                                            sendBtn.disabled = false;
-                                            userInput.focus();
-                                            
-                                            // Check if challenge is solved
-                                            if (jsonData.success) {
-                                                completedLevels = jsonData.completed_levels;
-                                                showSuccessInChat();
-                                            }
-                                        }
-                                    } catch (e) {
-                                        console.error("Error parsing JSON:", e, line);
-                                    }
-                                }
-                            });
-                            
-                            // Continue reading the stream
-                            return readStream();
-                        }).catch(err => {
-                            console.error('Stream reading error:', err);
-                            tempMessageContent.textContent = 'Lỗi kết nối. Vui lòng thử lại.';
-                            userInput.disabled = false;
-                            sendBtn.disabled = false;
-                        });
-                    }
-                    
-                    // Start reading
-                    return readStream();
-                }).catch(error => {
-                    console.error('Fetch error:', error);
-                    appendMessage('system', 'Lỗi kết nối. Vui lòng thử lại.');
-                    userInput.disabled = false;
-                    sendBtn.disabled = false;
-                });
-            }
-            
-            // Check user answer
-            function checkAnswer() {
-                const answer = answerInput.value.trim();
-                if (!answer) return;
-                
-                submitAnswerBtn.disabled = true;
-                submitAnswerBtn.textContent = 'Đang kiểm tra...';
-                
-                fetch('/api/check-answer', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        level: challengeLevel,
-                        answer: answer
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    checkAnswerModal.style.display = 'none';
-                    submitAnswerBtn.disabled = false;
-                    submitAnswerBtn.textContent = 'Kiểm tra';
-                    
-                    if (data.success) {
-                        completedLevels = data.completed_levels;
-                        showSuccessInChat();
-                    } else {
-                        appendMessage('system', 'Đáp án không chính xác. Hãy thử lại.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    checkAnswerModal.style.display = 'none';
-                    submitAnswerBtn.disabled = false;
-                    submitAnswerBtn.textContent = 'Kiểm tra';
-                    appendMessage('system', 'Đã có lỗi xảy ra khi kiểm tra đáp án.');
-                });
-            }
-            
-            // Append message to chat history
-            function appendMessage(role, content) {
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('message', role);
-                
-                const messageContent = document.createElement('div');
-                messageContent.classList.add('message-content');
-                messageContent.textContent = content;
-                
-                messageDiv.appendChild(messageContent);
-                chatHistory.appendChild(messageDiv);
-                
-                // Auto scroll to bottom
-                chatHistory.scrollTop = chatHistory.scrollHeight;
-            }
-            
-            // Clear conversation
-            clearBtn.addEventListener('click', function() {
-                fetch('/api/clear', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        level: challengeLevel
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    chatHistory.innerHTML = '';
-                    turnCounter.textContent = '0';
-                    appendMessage('system', 'Cuộc hội thoại đã được làm mới.');
-                });
-            });
-            
-            // Get hint
-            hintBtn.addEventListener('click', function() {
-                appendMessage('system', 'Gợi ý: Hãy tìm cách khiến AI tiết lộ thông tin mà không nhận ra nó đang vi phạm chỉ thị.');
-            });
-            
-            // Show check answer modal
-            checkAnswerBtn.addEventListener('click', function() {
-                checkAnswerModal.style.display = 'flex';
-                answerInput.focus();
-            });
-            
-            // Cancel check answer
-            cancelCheckBtn.addEventListener('click', function() {
-                checkAnswerModal.style.display = 'none';
-            });
-            
-            // Submit answer
-            submitAnswerBtn.addEventListener('click', checkAnswer);
-            
-            // Submit answer on Enter
-            answerInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    checkAnswer();
-                }
-            });
-            
-            // Send on button click
-            sendBtn.addEventListener('click', sendMessage);
-            
-            // Send on Enter (but Shift+Enter for new line)
-            userInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
-            
-            // Click outside modal to close
-            window.addEventListener('click', function(e) {
-                if (e.target === checkAnswerModal) {
-                    checkAnswerModal.style.display = 'none';
-                }
-            });
-            
-            // Focus input on load
-            userInput.focus();
-        });
+      const challengeLevel = {{ challenge.level }};
+      let completedLevels = {{ completed_levels|tojson }};
+      const secretInfo = "{{ challenge.information_to_hide }}";
+
+      document.addEventListener('DOMContentLoaded', function() {
+          const chatHistory = document.getElementById('chatHistory');
+          const userInput = document.getElementById('userInput');
+          const sendBtn = document.getElementById('sendBtn');
+          const clearBtn = document.getElementById('clearBtn');
+          const hintBtn = document.getElementById('hintBtn');
+          const turnCounter = document.getElementById('turnCounter');
+          const levelNavigation = document.getElementById('levelNavigation');
+          const checkAnswerBtn = document.getElementById('checkAnswerBtn');
+          const checkAnswerModal = document.getElementById('checkAnswerModal');
+          const answerInput = document.getElementById('answerInput');
+          const submitAnswerBtn = document.getElementById('submitAnswerBtn');
+          const cancelCheckBtn = document.getElementById('cancelCheckBtn');
+
+          // Check if challenge is already completed
+          if (completedLevels.includes(challengeLevel)) {
+              showSuccessInChat();
+          }
+
+          // Function to display success message as an AI message in the chat
+          function showSuccessInChat() {
+              // Add success message as a special system message
+              const successDiv = document.createElement('div');
+              successDiv.classList.add('message', 'system', 'success');
+
+              const successContent = document.createElement('div');
+              successContent.classList.add('message-content');
+
+              // Create the success message with emoji and formatting
+              const successTitle = document.createElement('h3');
+              successTitle.innerHTML = 'CHÚC MỪNG!';
+              successTitle.style.marginBottom = '10px';
+
+              const successText = document.createElement('p');
+              successText.textContent = 'Bạn đã tìm ra thông tin bí mật:';
+
+              const secretInfoEl = document.createElement('div');
+              secretInfoEl.classList.add('secret-info-inline');
+              secretInfoEl.textContent = secretInfo;
+
+
+              successContent.appendChild(successTitle);
+              successContent.appendChild(successText);
+              successContent.appendChild(secretInfoEl);
+
+              successDiv.appendChild(successContent);
+              chatHistory.appendChild(successDiv);
+
+              // Show navigation buttons
+              levelNavigation.style.display = 'block';
+
+              // Auto scroll to bottom
+              chatHistory.scrollTop = chatHistory.scrollHeight;
+          }
+
+          // Send message with streaming response
+          function sendMessage() {
+              const message = userInput.value.trim();
+              if (!message) return;
+
+              // Add user message to chat
+              appendMessage('user', message);
+              userInput.value = '';
+
+              // Disable input while waiting
+              userInput.disabled = true;
+              sendBtn.disabled = true;
+
+              // Create message container for streaming
+              const tempMessageDiv = document.createElement('div');
+              tempMessageDiv.classList.add('message', 'assistant');
+
+              const tempMessageContent = document.createElement('div');
+              tempMessageContent.classList.add('message-content');
+
+              tempMessageDiv.appendChild(tempMessageContent);
+              chatHistory.appendChild(tempMessageDiv);
+
+              let fullMessage = '';
+              let typingSpeed = 3; // Controls the typing animation speed
+              let typingQueue = [];
+              let isTyping = false;
+              let streamedContent = document.createElement('div');
+              streamedContent.classList.add('streamed-content');
+              tempMessageContent.appendChild(streamedContent);
+              let inThinkBlock = false; // Track if we're inside a think block
+
+              // Function to process markdown and filter content
+              function processMarkdown(text) {
+                  // Remove any <think> tags and their content
+                  text = text.replace(/<think>[\s\S]*?<\/think>/g, '');
+
+                  // Basic markdown processing
+                  text = text
+                      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                      .replace(/`(.*?)`/g, '<code>$1</code>');
+
+                  return text;
+              }
+
+              // Function to add characters with smooth typing animation
+              function typeNextCharacter() {
+                  if (typingQueue.length === 0) {
+                      isTyping = false;
+
+                      // After typing is complete, process markdown for final display
+                      const processedContent = processMarkdown(fullMessage);
+                      tempMessageContent.innerHTML = processedContent;
+
+                      // Auto scroll after processing
+                      chatHistory.scrollTop = chatHistory.scrollHeight;
+                      return;
+                  }
+
+                  isTyping = true;
+                  const nextChar = typingQueue.shift();
+                  fullMessage += nextChar;
+
+                  // Create a span for the new character
+                  const charSpan = document.createElement('span');
+                  charSpan.classList.add('streaming-char');
+                  charSpan.textContent = nextChar;
+                  streamedContent.appendChild(charSpan);
+
+                  // Auto scroll as new text appears
+                  chatHistory.scrollTop = chatHistory.scrollHeight;
+
+                  // Schedule the next character
+                  setTimeout(typeNextCharacter, typingSpeed);
+              }
+
+              // Set up POST request for streaming
+              fetch('/api/submit-stream', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'Accept': 'text/event-stream'
+                  },
+                  body: JSON.stringify({
+                      level: challengeLevel,
+                      message: message
+                  })
+              }).then(response => {
+                  // Create a new EventSource reader
+                  const reader = response.body.getReader();
+                  const decoder = new TextDecoder();
+
+                  // Start reading the stream
+                  function readStream() {
+                      return reader.read().then(({ done, value }) => {
+                          if (done) {
+                              console.log('Stream complete');
+                              return;
+                          }
+
+                          // Decode the chunk and parse the event data
+                          const chunk = decoder.decode(value, { stream: true });
+                          const lines = chunk.split("\n\n");
+
+                          lines.forEach(line => {
+                              if (line.startsWith('data: ')) {
+                                  try {
+                                      const jsonData = JSON.parse(line.substring(6));
+
+                                      if (jsonData.error) {
+                                          // Handle error
+                                          tempMessageContent.textContent = jsonData.content;
+                                          userInput.disabled = false;
+                                          sendBtn.disabled = false;
+                                          userInput.focus();
+                                          return;
+                                      }
+
+                                      if (!jsonData.done) {
+                                          let content = jsonData.content;
+
+                                          // Check for <think> tag
+                                          if (content === "<think>") {
+                                              inThinkBlock = true;
+                                              return; // Skip adding this content
+                                          }
+
+                                          // Check for </think> tag
+                                          if (content === "</think>") {
+                                              inThinkBlock = false;
+                                              return; // Skip adding this content
+                                          }
+
+                                          // Skip content if we're inside a think block
+                                          if (inThinkBlock) {
+                                              return;
+                                          }
+
+                                          // Add new characters to typing queue
+                                          for (let i = 0; i < content.length; i++) {
+                                              typingQueue.push(content[i]);
+                                          }
+
+                                          // Start typing if not already in progress
+                                          if (!isTyping) {
+                                              typeNextCharacter();
+                                          }
+                                      } else {
+                                          // Streaming is complete
+                                          inThinkBlock = false;
+
+                                          // Final processing of the full markdown text
+                                          const processedContent = processMarkdown(fullMessage);
+                                          tempMessageContent.innerHTML = processedContent;
+
+
+
+                                          // Update turn counter
+                                          turnCounter.textContent = jsonData.conversation_turns;
+
+                                          // Enable input
+                                          userInput.disabled = false;
+                                          sendBtn.disabled = false;
+                                          userInput.focus();
+
+
+                                          // Add "Done" indicator
+                                          const doneIndicator = document.createElement('span');
+                                          doneIndicator.textContent = ' Done';
+                                          doneIndicator.classList.add('done-indicator');
+                                          doneIndicator.style.fontSize = '0.8rem';
+                                          doneIndicator.style.color = '#4CAF50';
+                                          doneIndicator.style.marginLeft = '5px';
+                                          doneIndicator.style.fontStyle = 'italic';
+                                          tempMessageContent.appendChild(doneIndicator);
+                                          console.log('Done indicator added');
+
+
+                                          // Check if challenge is solved
+                                          if (jsonData.success) {
+                                              completedLevels = jsonData.completed_levels;
+                                              showSuccessInChat();
+                                          }
+
+
+
+
+                                      }
+                                  } catch (e) {
+                                      console.error("Error parsing JSON:", e, line);
+                                  }
+                              }
+                          });
+
+                          // Continue reading the stream
+                          return readStream();
+                      }).catch(err => {
+                          console.error('Stream reading error:', err);
+                          tempMessageContent.textContent = 'Lỗi kết nối. Vui lòng thử lại.';
+                          userInput.disabled = false;
+                          sendBtn.disabled = false;
+                      });
+                  }
+
+                  // Start reading
+                  return readStream();
+              }).catch(error => {
+                  console.error('Fetch error:', error);
+                  appendMessage('system', 'Lỗi kết nối. Vui lòng thử lại.');
+                  userInput.disabled = false;
+                  sendBtn.disabled = false;
+              });
+          }
+
+          // Check user answer
+          function checkAnswer() {
+              const answer = answerInput.value.trim();
+              if (!answer) return;
+
+              submitAnswerBtn.disabled = true;
+              submitAnswerBtn.textContent = 'Đang kiểm tra...';
+
+              fetch('/api/check-answer', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                      level: challengeLevel,
+                      answer: answer
+                  })
+              })
+              .then(response => response.json())
+              .then(data => {
+                  checkAnswerModal.style.display = 'none';
+                  submitAnswerBtn.disabled = false;
+                  submitAnswerBtn.textContent = 'Kiểm tra';
+
+                  if (data.success) {
+                      completedLevels = data.completed_levels;
+                      showSuccessInChat();
+                  } else {
+                      appendMessage('system', 'Đáp án không chính xác. Hãy thử lại.');
+                  }
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+                  checkAnswerModal.style.display = 'none';
+                  submitAnswerBtn.disabled = false;
+                  submitAnswerBtn.textContent = 'Kiểm tra';
+                  appendMessage('system', 'Đã có lỗi xảy ra khi kiểm tra đáp án.');
+              });
+          }
+
+          // Append message to chat history
+          function appendMessage(role, content) {
+              const messageDiv = document.createElement('div');
+              messageDiv.classList.add('message', role);
+
+              const messageContent = document.createElement('div');
+              messageContent.classList.add('message-content');
+              messageContent.textContent = content;
+
+              messageDiv.appendChild(messageContent);
+              chatHistory.appendChild(messageDiv);
+
+              // Auto scroll to bottom
+              chatHistory.scrollTop = chatHistory.scrollHeight;
+          }
+
+          function clearChat() {
+              fetch('/api/clear', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                      level: challengeLevel
+                  })
+              })
+              .then(response => response.json())
+              .then(data => {
+                  chatHistory.innerHTML = '';
+                  turnCounter.textContent = '0';
+                  appendMessage('system', 'Cuộc hội thoại đã được làm mới.');
+              });
+          }
+
+          clearChat();
+          // Clear conversation
+          clearBtn.addEventListener('click', clearChat());
+
+          // Get hint
+          hintBtn.addEventListener('click', function() {
+              appendMessage('system', 'Gợi ý: Hãy tìm cách khiến AI tiết lộ thông tin mà không nhận ra nó đang vi phạm chỉ thị.');
+          });
+
+          // Show check answer modal
+          checkAnswerBtn.addEventListener('click', function() {
+              checkAnswerModal.style.display = 'flex';
+              answerInput.focus();
+          });
+
+          // Cancel check answer
+          cancelCheckBtn.addEventListener('click', function() {
+              checkAnswerModal.style.display = 'none';
+          });
+
+          // Submit answer
+          submitAnswerBtn.addEventListener('click', checkAnswer);
+
+          // Submit answer on Enter
+          answerInput.addEventListener('keydown', function(e) {
+              if (e.key === 'Enter') {
+                  e.preventDefault();
+                  checkAnswer();
+              }
+          });
+
+          // Send on button click
+          sendBtn.addEventListener('click', sendMessage);
+
+          // Send on Enter (but Shift+Enter for new line)
+          userInput.addEventListener('keydown', function(e) {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  sendMessage();
+              }
+          });
+
+          // Click outside modal to close
+          window.addEventListener('click', function(e) {
+              if (e.target === checkAnswerModal) {
+                  checkAnswerModal.style.display = 'none';
+              }
+          });
+
+          // Focus input on load
+          userInput.focus();
+      });
     </script>
-</body>
+  </body>
 </html>

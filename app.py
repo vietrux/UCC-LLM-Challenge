@@ -14,9 +14,9 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 # Constants
-API_KEY = "sk-123"
-BASE_URL = "https://ollama.vietrux.id.vn/v1"
-MODEL = "hf.co/thuan220401/Vistral-7B-Chat-gguf:latest"
+API_KEY = "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"
+BASE_URL = "https://openrouter.ai/api/v1"
+MODEL = "openai/gpt-4o-mini"
 
 # Initialize OpenAI client
 def get_llm_response(messages: List[Dict[str, str]], system_prompt: str) -> str:
@@ -31,7 +31,7 @@ def get_llm_response(messages: List[Dict[str, str]], system_prompt: str) -> str:
             model=MODEL,
             messages=full_messages,
             temperature=0.7,
-            max_tokens=800
+            max_tokens=1024
         )
         
         return completion.choices[0].message.content
@@ -41,7 +41,7 @@ def get_llm_response(messages: List[Dict[str, str]], system_prompt: str) -> str:
 def get_streaming_llm_response(messages: List[Dict[str, str]], system_prompt: str):
     """Get streaming response from LLM"""
     try:
-        client = OpenAI(api_key="sk-123", base_url="https://ollama.vietrux.id.vn/v1")
+        client = OpenAI(api_key=API_KEY, base_url=BASE_URL)
         
         # Prepend the system message to the conversation history
         full_messages = [{"role": "system", "content": system_prompt}] + messages
@@ -50,7 +50,7 @@ def get_streaming_llm_response(messages: List[Dict[str, str]], system_prompt: st
             model=MODEL,
             messages=full_messages,
             temperature=0.7,
-            max_tokens=800,
+            max_tokens=1024,
             stream=True
         )
         
@@ -90,10 +90,12 @@ def challenge(level):
         return "Challenge not found", 404
         
     # Initialize conversation for this challenge if needed
+
     session_key = f"conversation_{level}"
     if session_key not in session:
         session[session_key] = []
-        
+    # Remove all previous conversation history for this challenge
+    
     return render_template('challenge.html', challenge=challenge, 
                            completed_levels=session.get('completed_levels', []))
 
@@ -102,7 +104,7 @@ def submit():
     """API endpoint to handle user submission and get AI response"""
     data = request.json
     level = data.get('level')
-    user_message = data.get('message')
+    user_message = '/no-think ' + data.get('message')
     
     # Find the challenge
     challenge = None
@@ -157,7 +159,7 @@ def submit_stream():
     """API endpoint to handle user submission and get streaming AI response"""
     data = request.json
     level = data.get('level')
-    user_message = data.get('message')
+    user_message = '/no-think ' + data.get('message')
     
     # Find the challenge
     challenge = None
@@ -286,4 +288,4 @@ def clear():
     return jsonify({'status': 'success', 'message': 'Conversation cleared'})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5007)

@@ -671,10 +671,7 @@ textarea:focus {
 
 /* Typing cursor for streaming effect */
 .typing-cursor {
-    display: inline-block;
-    animation: blink 1s infinite;
-    margin-left: 2px;
-    font-weight: bold;
+    display: none; /* Hide the cursor completely */
 }
 
 @keyframes blink {
